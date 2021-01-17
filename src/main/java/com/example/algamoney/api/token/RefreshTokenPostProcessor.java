@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 @ControllerAdvice //Esta classe possui controllerAdvice para que ela escute e capture qualquer chamada que tenha no responseBody o model que colocarmos dentro do <>
+//a classe esta adicionando o token no cookie
 public class RefreshTokenPostProcessor implements ResponseBodyAdvice<OAuth2AccessToken> {
 
 	@Override

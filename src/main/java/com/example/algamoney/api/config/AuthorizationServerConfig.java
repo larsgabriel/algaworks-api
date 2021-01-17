@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -26,7 +27,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	AuthenticationManager authenticationManager;
 	
 	@Autowired
-	private UserDetailsServiceImpl userDetailsService;
+	private UserDetailsService userDetailsService;
 
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
@@ -41,6 +42,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 			//refresh_token é um granttype que implementa o refresh token.
 			//QUANDO É GERADO UM PRIMEIRO TOKEN COMUM, ELE DURA 20 SEGUNDOS. MAS NA MESMA REQUISIÇÃO QUE VEM O TOKEN COMUM VEM UM CARA CHAMADO REFRESH TOKEN,
 			//USANDO ESSE CARA PARA FAZER UMA NOVA REQUISIÇÃO ELE GERA UM NOVO TOKEN COM ID DE ACCESS_TOKEN QUE ESSE CARA PODE SER USADO NA REQUISIÇÃO
+			//ISSO DA A SEGURANÇA PQ O ACCESS_TOKEN PODE SER ACESSADO VIA JS, PORÉM SE O REFRESH_TOKEN GERAR UM NOVO ACCESS_TOKEN PRA GENTE ELE É FEITO VIA COOKIE SEM ACESSO
+			//VIA JS E O PROPRIO BROWSER RENOVA O ACCESS TOKEN PRA GENTE
 			.authorizedGrantTypes("password", "refresh_token")
 			//TEMPO DE DURAÇÃO DO TOKEN
 			.accessTokenValiditySeconds(20)
