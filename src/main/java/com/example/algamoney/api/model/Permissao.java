@@ -12,6 +12,6 @@ import lombok.Data;
 public class Permissao {
 	
 	@Id
-	private Long id;
+	private Long id_permissao;
 	private String descricao;
 }

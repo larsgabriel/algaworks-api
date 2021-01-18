@@ -18,7 +18,7 @@ import lombok.Data;
 public class Usuario {
 	
 	@Id
-	private Long id;
+	private Long id_usuario;
 	
 	private String nome;
 	
@@ -27,7 +27,7 @@ public class Usuario {
 	private String senha;
 	
 	@ManyToMany(fetch = FetchType.EAGER) //EAGER É TODO VEZ QUE TRAZER UM USUARIO TRAZER AS PERMISSOES JUNTO, SE FOSSE LAZY TRARIA SÓ SE PEDIR
-	@JoinTable(name = "usuario_permissao", joinColumns = @JoinColumn(name="codigo_usuario"), inverseJoinColumns = @JoinColumn(name ="codigo_permissao"))
+	@JoinTable(name = "usuario_permissao", joinColumns = @JoinColumn(name="id_usuario"), inverseJoinColumns = @JoinColumn(name ="id_permissao"))
 	private List<Permissao> permissoes;
 	
 }

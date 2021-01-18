@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -25,19 +26,16 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	@Autowired
 	@Qualifier("authenticationManagerBean")
 	AuthenticationManager authenticationManager;
-	
-	@Autowired
-	private UserDetailsService userDetailsService;
 
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-		PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+		String encodedPassword = new BCryptPasswordEncoder().encode("@ngul@r0");
 		clients.inMemory() //EM MEMORIA NÃO É BANCO DE DADOS
 			//withClient = CLIENT/APLICAÇÃO/SERVIÇO QUE VAI PEDIR TOKEN, NO CASO EXEMPLO SERIA UMA APLICAÇÃO ANGULAR. AS INFORMAÇÕES
 			//TEM QUE SER AS MESMAS DO POSTMAN. NO POSTMAN SERÁ CONFIGURADO UM POST COM ESTA URL localhost:8080/oauth/token
 			//AUTHORIZATION TYPE BASIC AUTH USERNAME angular PASSWORD linha debaixo secret. Será então gerado um token
 			.withClient("angular") 
-			.secret(encoder.encode("@ngul@r0")) //SENHA DO CLIENT
+			.secret(encodedPassword) //SENHA DO CLIENT
 			.scopes("read", "write")
 			//refresh_token é um granttype que implementa o refresh token.
 			//QUANDO É GERADO UM PRIMEIRO TOKEN COMUM, ELE DURA 20 SEGUNDOS. MAS NA MESMA REQUISIÇÃO QUE VEM O TOKEN COMUM VEM UM CARA CHAMADO REFRESH TOKEN,
@@ -53,14 +51,6 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 			.refreshTokenValiditySeconds(3600 * 24);
 	}
 	
-//	@Override //ESTE MÉTODO FUNCIONA PARA VALIDAÇÃO DE TOKEN IN MEMORIA
-//	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-//		endpoints
-//		.tokenStore(tokenStore())
-//		.authenticationManager(authenticationManager);
-//	}
-	
-	
 	//ESTE MÉTODO PARA JWT verificar o token gerado no  https://jwt.io/
 	@Override 
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
@@ -68,8 +58,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 		.tokenStore(tokenStore())
 		//CONVERSOR DE TOKEN
 		.accessTokenConverter(accessTokenConverter())
-		.reuseRefreshTokens(false)
-		.userDetailsService(userDetailsService)
+		.reuseRefreshTokens(true)
 		.authenticationManager(authenticationManager);
 	}
 	
