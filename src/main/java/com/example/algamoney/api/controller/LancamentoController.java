@@ -26,6 +26,7 @@ import com.example.algamoney.api.model.Categoria;
 import com.example.algamoney.api.model.Lancamento;
 import com.example.algamoney.api.repository.CategoriaRepository;
 import com.example.algamoney.api.repository.LancamentoRepository;
+import com.example.algamoney.api.repository.ProjectionLancamento;
 import com.example.algamoney.api.repository.filter.LancamentoFilter;
 
 @RestController
@@ -43,6 +44,11 @@ public class LancamentoController {
 	@GetMapping("/listar")
 	public Page<Lancamento> pesquisar(LancamentoFilter lancamentoFilter, Pageable pageable){
 		return lancamentoRepository.filtrar(lancamentoFilter, pageable);
+	}
+	
+	@GetMapping(value = "/listar", params = "resumo")
+	public Page<ProjectionLancamento> projectionLancamento(LancamentoFilter lancamentoFilter, Pageable pageable){
+		return lancamentoRepository.projectionLancamento(lancamentoFilter, pageable);
 	}
 	
 	@PostMapping("/criar")

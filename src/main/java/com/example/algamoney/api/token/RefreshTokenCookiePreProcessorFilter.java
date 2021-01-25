@@ -17,6 +17,8 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+
+//CLASSE RESPONSAVEL POR ADICIONAR O REFRESH TOKEN NA REQUISIÇÃO
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)//Prioridade alta para que o token seja adicionado na requisição antes que seja feita a requisição
 public class RefreshTokenCookiePreProcessorFilter implements Filter{
@@ -44,6 +46,7 @@ public class RefreshTokenCookiePreProcessorFilter implements Filter{
 		
 	}
 	
+	//É NECESSARIA A CRIAÇÃO DE UM NOVA REQUEST.
 	static class MyServletRequestWrapper extends HttpServletRequestWrapper{
 		
 		private String refreshToken;
